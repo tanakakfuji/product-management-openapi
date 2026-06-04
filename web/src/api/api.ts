@@ -23,49 +23,27 @@ import type {
   UseQueryResult
 } from '@tanstack/react-query';
 
+import * as axios from 'axios';
+import type {
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse
+} from 'axios';
+
 import type {
   Product,
   ProductForm
 } from './model';
 
-export type getProductsResponse200 = {
-  data: Product[]
-  status: 200
-}
-
-export type getProductsResponseSuccess = (getProductsResponse200) & {
-  headers: Headers;
-};
-;
-
-export type getProductsResponse = (getProductsResponseSuccess)
-
-export const getGetProductsUrl = () => {
+export const getProducts = (
+     options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<Product[]>> => {
 
 
-
-
-  return `http://localhost:8080/products`
-}
-
-export const getProducts = async ( options?: RequestInit): Promise<getProductsResponse> => {
-
-  const res = await fetch(getGetProductsUrl(),
-  {
-    ...options,
-    method: 'GET'
-
-
+    return axios.default.get(
+      `http://localhost:8080/products`,options
+    );
   }
-)
-
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: getProductsResponse['data'] = body !== null ? body : ''
-  return { data, status: res.status, headers: res.headers } as getProductsResponse
-}
-
 
 
 
@@ -77,16 +55,16 @@ export const getGetProductsQueryKey = () => {
     }
 
 
-export const getGetProductsQueryOptions = <TData = Awaited<ReturnType<typeof getProducts>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProducts>>, TError, TData>>, fetch?: RequestInit}
+export const getGetProductsQueryOptions = <TData = Awaited<ReturnType<typeof getProducts>>, TError = AxiosError<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProducts>>, TError, TData>>, axios?: AxiosRequestConfig}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, axios: axiosOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetProductsQueryKey();
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProducts>>> = ({ signal }) => getProducts({ signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProducts>>> = ({ signal }) => getProducts({ signal, ...axiosOptions });
 
 
 
@@ -96,36 +74,36 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetProductsQueryResult = NonNullable<Awaited<ReturnType<typeof getProducts>>>
-export type GetProductsQueryError = unknown
+export type GetProductsQueryError = AxiosError<unknown>
 
 
-export function useGetProducts<TData = Awaited<ReturnType<typeof getProducts>>, TError = unknown>(
+export function useGetProducts<TData = Awaited<ReturnType<typeof getProducts>>, TError = AxiosError<unknown>>(
   options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProducts>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getProducts>>,
           TError,
           Awaited<ReturnType<typeof getProducts>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetProducts<TData = Awaited<ReturnType<typeof getProducts>>, TError = unknown>(
+export function useGetProducts<TData = Awaited<ReturnType<typeof getProducts>>, TError = AxiosError<unknown>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProducts>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getProducts>>,
           TError,
           Awaited<ReturnType<typeof getProducts>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetProducts<TData = Awaited<ReturnType<typeof getProducts>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProducts>>, TError, TData>>, fetch?: RequestInit}
+export function useGetProducts<TData = Awaited<ReturnType<typeof getProducts>>, TError = AxiosError<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProducts>>, TError, TData>>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetProducts<TData = Awaited<ReturnType<typeof getProducts>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProducts>>, TError, TData>>, fetch?: RequestInit}
+export function useGetProducts<TData = Awaited<ReturnType<typeof getProducts>>, TError = AxiosError<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProducts>>, TError, TData>>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -142,57 +120,29 @@ export function useGetProducts<TData = Awaited<ReturnType<typeof getProducts>>, 
 
 
 
-export type createProductResponse200 = {
-  data: Product
-  status: 200
-}
-
-export type createProductResponseSuccess = (createProductResponse200) & {
-  headers: Headers;
-};
-;
-
-export type createProductResponse = (createProductResponseSuccess)
-
-export const getCreateProductUrl = () => {
+export const createProduct = (
+    productForm: ProductForm, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<Product>> => {
 
 
-
-
-  return `http://localhost:8080/products`
-}
-
-export const createProduct = async (productForm: ProductForm, options?: RequestInit): Promise<createProductResponse> => {
-
-  const res = await fetch(getCreateProductUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(productForm)
+    return axios.default.post(
+      `http://localhost:8080/products`,
+      productForm,options
+    );
   }
-)
-
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: createProductResponse['data'] = body !== null ? body : ''
-  return { data, status: res.status, headers: res.headers } as createProductResponse
-}
 
 
 
-
-export const getCreateProductMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProduct>>, TError,{data: ProductForm}, TContext>, fetch?: RequestInit}
+export const getCreateProductMutationOptions = <TError = AxiosError<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProduct>>, TError,{data: ProductForm}, TContext>, axios?: AxiosRequestConfig}
 ): UseMutationOptions<Awaited<ReturnType<typeof createProduct>>, TError,{data: ProductForm}, TContext> => {
 
 const mutationKey = ['createProduct'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, axios: axiosOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, axios: undefined};
 
 
 
@@ -200,7 +150,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof createProduct>>, {data: ProductForm}> = (props) => {
           const {data} = props ?? {};
 
-          return  createProduct(data,fetchOptions)
+          return  createProduct(data,axiosOptions)
         }
 
 
@@ -212,10 +162,10 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
 
     export type CreateProductMutationResult = NonNullable<Awaited<ReturnType<typeof createProduct>>>
     export type CreateProductMutationBody = ProductForm
-    export type CreateProductMutationError = unknown
+    export type CreateProductMutationError = AxiosError<unknown>
 
-    export const useCreateProduct = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProduct>>, TError,{data: ProductForm}, TContext>, fetch?: RequestInit}
+    export const useCreateProduct = <TError = AxiosError<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProduct>>, TError,{data: ProductForm}, TContext>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createProduct>>,
         TError,
@@ -225,57 +175,28 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       return useMutation(getCreateProductMutationOptions(options), queryClient);
     }
 
-export type deleteProductResponse200 = {
-  data: void
-  status: 200
-}
-
-export type deleteProductResponseSuccess = (deleteProductResponse200) & {
-  headers: Headers;
-};
-;
-
-export type deleteProductResponse = (deleteProductResponseSuccess)
-
-export const getDeleteProductUrl = (productId: number,) => {
+export const deleteProduct = (
+    productId: number, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<void>> => {
 
 
-
-
-  return `http://localhost:8080/products/${productId}`
-}
-
-export const deleteProduct = async (productId: number, options?: RequestInit): Promise<deleteProductResponse> => {
-
-  const res = await fetch(getDeleteProductUrl(productId),
-  {
-    ...options,
-    method: 'DELETE'
-
-
+    return axios.default.delete(
+      `http://localhost:8080/products/${productId}`,options
+    );
   }
-)
-
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: deleteProductResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as deleteProductResponse
-}
 
 
 
-
-export const getDeleteProductMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProduct>>, TError,{productId: number}, TContext>, fetch?: RequestInit}
+export const getDeleteProductMutationOptions = <TError = AxiosError<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProduct>>, TError,{productId: number}, TContext>, axios?: AxiosRequestConfig}
 ): UseMutationOptions<Awaited<ReturnType<typeof deleteProduct>>, TError,{productId: number}, TContext> => {
 
 const mutationKey = ['deleteProduct'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, axios: axiosOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, axios: undefined};
 
 
 
@@ -283,7 +204,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteProduct>>, {productId: number}> = (props) => {
           const {productId} = props ?? {};
 
-          return  deleteProduct(productId,fetchOptions)
+          return  deleteProduct(productId,axiosOptions)
         }
 
 
@@ -295,10 +216,10 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
 
     export type DeleteProductMutationResult = NonNullable<Awaited<ReturnType<typeof deleteProduct>>>
 
-    export type DeleteProductMutationError = unknown
+    export type DeleteProductMutationError = AxiosError<unknown>
 
-    export const useDeleteProduct = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProduct>>, TError,{productId: number}, TContext>, fetch?: RequestInit}
+    export const useDeleteProduct = <TError = AxiosError<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProduct>>, TError,{productId: number}, TContext>, axios?: AxiosRequestConfig}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof deleteProduct>>,
         TError,
