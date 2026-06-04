@@ -7,6 +7,7 @@ export default defineConfig({
       schemas: "./src/api/model",
       client: "react-query",
       baseUrl: "http://localhost:8080",
+      httpClient: "axios",
     },
   },
 });
