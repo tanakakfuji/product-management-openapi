@@ -17,6 +17,7 @@ const HomePage = () => {
       setProducts(response?.data);
     } catch {
       setError(true);
+      alert("取得処理に失敗しました。");
     } finally {
       setLoading(false);
     }
@@ -33,6 +34,19 @@ const HomePage = () => {
   if (error) {
     return <div>エラーが発生しました。</div>;
   }
+
+  const handleClick = async (e) => {
+    const productId = Number(e.target.value);
+    try {
+      const client = getOpenAPIDefinition();
+      const response = await client.deleteProduct(productId);
+      if (response.status === 204) {
+        setProducts(products.filter((p) => p.id !== productId));
+      }
+    } catch {
+      alert("削除処理に失敗しました。");
+    }
+  };
 
   return (
     <div>
@@ -68,6 +82,12 @@ const HomePage = () => {
                   >
                     価格
                   </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900 sm:pr-6"
+                  >
+                    操作
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
@@ -84,6 +104,16 @@ const HomePage = () => {
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-right font-mono tabular-nums text-gray-900 sm:pr-6">
                       ¥{Number(p.price).toLocaleString()}
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        value={p.id}
+                        onClick={handleClick}
+                        className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded"
+                      >
+                        削除
+                      </button>
                     </td>
                   </tr>
                 ))}

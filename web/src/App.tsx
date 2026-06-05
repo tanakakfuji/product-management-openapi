@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import HomePage from "./pages/HomePage";
 import { BrowserRouter as Router, Routes, Route } from "react-router";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import AddProductPage from "./pages/AddProductPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,7 +22,7 @@ function App() {
           <Header />
           <Routes>
             <Route path="/" element={<HomePage />} />
-            {/* <Route path="/addProduct" element={<AddProductPage />} /> */}
+            <Route path="/addProduct" element={<AddProductPage />} />
           </Routes>
         </Router>
       </QueryClientProvider>
