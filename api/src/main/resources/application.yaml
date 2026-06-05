@@ -11,14 +11,15 @@ spring:
       mode: always
       schema-locations: classpath:sql/schema.sql
       data-locations: classpath:sql/data.sql
-  server:
-    servlet:
-      context-path: /api
   jpa:
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+server:
+  servlet:
+    context-path: /api
+
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
