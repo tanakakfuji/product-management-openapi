@@ -1,7 +1,6 @@
 import "./App.css";
 import Header from "./components/Header";
 import HomePage from "./pages/HomePage";
-import AddProductPage from "./pages/AddProductPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
@@ -22,7 +21,7 @@ function App() {
           <Header />
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/addProduct" element={<AddProductPage />} />
+            {/* <Route path="/addProduct" element={<AddProductPage />} /> */}
           </Routes>
         </Router>
       </QueryClientProvider>

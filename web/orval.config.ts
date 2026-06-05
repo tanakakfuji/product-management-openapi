@@ -3,10 +3,10 @@ export default defineConfig({
   petstore: {
     input: "../api/build/openapi.json",
     output: {
-      target: "./src/api/api.ts",
+      target: "./src/api/client.ts",
       schemas: "./src/api/model",
-      client: "react-query",
-      baseUrl: "http://localhost:8080",
+      client: "axios",
+      baseUrl: "http://localhost:8080/api",
       httpClient: "axios",
     },
   },
